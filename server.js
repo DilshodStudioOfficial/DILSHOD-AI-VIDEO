@@ -1,15 +1,7 @@
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname));
-
-app.get('/api/health', (req, res) => {
-  res.json({ ok: true, service: 'DILSHOD AI VIDEO', status: 'online' });
-});
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`DILSHOD AI VIDEO running on port ${PORT}`);
-});
+const express=require("express"); const path=require("path"); const {fal}=require("@fal-ai/client");
+const app=express(); const PORT=process.env.PORT||3000; fal.config({credentials:process.env.FAL_KEY});
+app.use(express.json({limit:"20mb"})); app.use(express.static(__dirname));
+app.get("/api/health",(q,s)=>s.json({ok:true,falConfigured:Boolean(process.env.FAL_KEY)}));
+app.post("/api/generate/text",async(q,s)=>{try{const {prompt,duration=5,aspectRatio="16:9",audio=false}=q.body;if(!prompt)return s.status(400).json({error:"Введите промт."});const r=await fal.subscribe("fal-ai/kling-video/v3/standard/text-to-video",{input:{prompt,duration:String(duration),aspect_ratio:aspectRatio,generate_audio:Boolean(audio)},logs:true});s.json({ok:true,videoUrl:r?.data?.video?.url,requestId:r.requestId})}catch(e){console.error(e);s.status(500).json({error:e.message})}});
+app.post("/api/generate/image",async(q,s)=>{try{const {prompt="",imageDataUrl,duration=5,aspectRatio="16:9",audio=false}=q.body;if(!imageDataUrl)return s.status(400).json({error:"Добавьте изображение."});const r=await fal.subscribe("fal-ai/kling-video/v3/standard/image-to-video",{input:{prompt,start_image_url:imageDataUrl,duration:String(duration),aspect_ratio:aspectRatio,generate_audio:Boolean(audio)},logs:true});s.json({ok:true,videoUrl:r?.data?.video?.url,requestId:r.requestId})}catch(e){console.error(e);s.status(500).json({error:e.message})}});
+app.get("*",(q,s)=>s.sendFile(path.join(__dirname,"index.html"))); app.listen(PORT,"0.0.0.0",()=>console.log("DILSHOD AI VIDEO:",PORT));

@@ -1,1 +1,118 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DILSHOD AI VIDEO</title><style>*{box-sizing:border-box}body{margin:0;background:#07090c;color:#f4f4f4;font-family:Arial}header{height:64px;border-bottom:1px solid #282b31;display:flex;align-items:center;padding:0 28px;gap:14px}.logo{width:38px;height:38px;border:1px solid #b78b00;border-radius:12px;display:grid;place-items:center;color:#ffd83d;font-weight:800}main{max-width:1050px;margin:32px auto;padding:0 18px}.card{background:#0c1015;border:1px solid #292e36;border-radius:18px;padding:24px}.sub{color:#9da6b3;margin-bottom:22px}.tabs{display:flex;gap:10px;margin-bottom:18px}button{border:1px solid #3a4049;background:#11161c;color:white;border-radius:10px;padding:11px 16px;cursor:pointer}.active,.generate{background:#e6b91e;color:#090909;border-color:#e6b91e;font-weight:800}textarea,select{width:100%;background:#090d12;border:1px solid #333a44;color:white;border-radius:10px;padding:13px}textarea{height:150px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:15px 0}.upload{border:1px dashed #48515d;border-radius:12px;padding:18px;margin-bottom:14px}.generate{width:100%;font-size:17px;padding:15px}.status{margin-top:15px;color:#b9c1cc}video{width:100%;margin-top:18px;border-radius:14px;background:#000;display:none}.hidden{display:none}@media(max-width:700px){.grid{grid-template-columns:1fr}}</style></head><body><header><div class="logo">DS</div><b>DILSHOD AI VIDEO</b></header><main><div class="card"><h1>Kling 3</h1><div class="sub">Реальная генерация AI-видео через fal.ai</div><div class="tabs"><button class="active" id="it">Изображение → Видео</button><button id="tt">Текст → Видео</button></div><div id="ib" class="upload"><b>Стартовый кадр</b><br><br><input id="image" type="file" accept="image/png,image/jpeg,image/webp"></div><textarea id="prompt" placeholder="Опишите видео..."></textarea><div class="grid"><select id="duration"><option value="5">5 сек</option><option value="10">10 сек</option><option value="15">15 сек</option></select><select id="ratio"><option>16:9</option><option>9:16</option><option>1:1</option></select></div><label><input id="audio" type="checkbox"> Генерировать звук</label><br><br><button class="generate" id="go">Создать видео</button><div class="status" id="status">Готово к генерации.</div><video id="result" controls></video></div></main><script>let mode="image";it.onclick=()=>{mode="image";it.className="active";tt.className="";ib.className="upload"};tt.onclick=()=>{mode="text";tt.className="active";it.className="";ib.className="hidden"};function dataURL(f){return new Promise((a,b)=>{let r=new FileReader;r.onload=()=>a(r.result);r.onerror=b;r.readAsDataURL(f)})}go.onclick=async()=>{let p={prompt:prompt.value.trim(),duration:Number(duration.value),aspectRatio:ratio.value,audio:audio.checked};try{if(mode==="image"){let f=image.files[0];if(!f)return status.textContent="Выберите изображение.";p.imageDataUrl=await dataURL(f)}else if(!p.prompt)return status.textContent="Введите промт.";go.disabled=true;status.textContent="Kling генерирует видео…";result.style.display="none";let r=await fetch(mode==="image"?"/api/generate/image":"/api/generate/text",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)}),d=await r.json();if(!r.ok||!d.videoUrl)throw Error(d.error||"Видео не получено");result.src=d.videoUrl;result.style.display="block";status.textContent="Видео готово ✅"}catch(e){status.textContent="Ошибка: "+e.message}finally{go.disabled=false}};</script></body></html>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DILSHOD AI VIDEO</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#07090c;color:#f4f4f4;font-family:Arial,sans-serif}
+header{height:64px;border-bottom:1px solid #282b31;display:flex;align-items:center;padding:0 28px;gap:14px}
+.logo{width:38px;height:38px;border:1px solid #b78b00;border-radius:12px;display:grid;place-items:center;color:#ffd83d;font-weight:800}
+main{max-width:1050px;margin:32px auto;padding:0 18px}.card{background:#0c1015;border:1px solid #292e36;border-radius:18px;padding:24px}
+.sub{color:#9da6b3;margin-bottom:22px}.tabs{display:flex;gap:10px;margin-bottom:18px}
+button{border:1px solid #3a4049;background:#11161c;color:#fff;border-radius:10px;padding:11px 16px;cursor:pointer}
+button.active,.generate{background:#e6b91e;color:#090909;border-color:#e6b91e;font-weight:800}
+textarea,select{width:100%;background:#090d12;border:1px solid #333a44;color:#fff;border-radius:10px;padding:13px}
+textarea{height:150px;resize:vertical}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:15px 0}
+.upload{border:1px dashed #48515d;border-radius:12px;padding:18px;margin-bottom:14px}.hidden{display:none}
+.generate{width:100%;font-size:17px;padding:15px}.generate:disabled{opacity:.6;cursor:not-allowed}
+.status{margin-top:15px;padding:12px;border:1px solid #2c333d;border-radius:10px;color:#c7ced8}
+video{width:100%;margin-top:18px;border-radius:14px;background:#000;display:none}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+</style></head>
+<body>
+<header><div class="logo">DS</div><b>DILSHOD AI VIDEO</b></header>
+<main><div class="card">
+<h1>Kling 3</h1><div class="sub">Реальная генерация AI-видео через fal.ai</div>
+<div class="tabs">
+<button type="button" class="active" id="imageTab">Изображение → Видео</button>
+<button type="button" id="textTab">Текст → Видео</button>
+</div>
+<div id="imageBox" class="upload"><b>Стартовый кадр</b><br><br><input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp"></div>
+<textarea id="promptInput" placeholder="Опишите видео..."></textarea>
+<div class="grid">
+<select id="durationSelect"><option value="5">5 сек</option><option value="10">10 сек</option><option value="15">15 сек</option></select>
+<select id="ratioSelect"><option value="16:9">16:9</option><option value="9:16">9:16</option><option value="1:1">1:1</option></select>
+</div>
+<label><input id="audioInput" type="checkbox"> Генерировать звук</label><br><br>
+<button type="button" class="generate" id="generateBtn">Создать видео</button>
+<div class="status" id="statusBox">Кнопка подключена. Готово к генерации.</div>
+<video id="resultVideo" controls playsinline></video>
+</div></main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  let mode = "image";
+  const imageTab = document.getElementById("imageTab");
+  const textTab = document.getElementById("textTab");
+  const imageBox = document.getElementById("imageBox");
+  const imageInput = document.getElementById("imageInput");
+  const promptInput = document.getElementById("promptInput");
+  const durationSelect = document.getElementById("durationSelect");
+  const ratioSelect = document.getElementById("ratioSelect");
+  const audioInput = document.getElementById("audioInput");
+  const generateBtn = document.getElementById("generateBtn");
+  const statusBox = document.getElementById("statusBox");
+  const resultVideo = document.getElementById("resultVideo");
+
+  imageTab.addEventListener("click", function(){
+    mode="image"; imageTab.classList.add("active"); textTab.classList.remove("active"); imageBox.classList.remove("hidden");
+  });
+  textTab.addEventListener("click", function(){
+    mode="text"; textTab.classList.add("active"); imageTab.classList.remove("active"); imageBox.classList.add("hidden");
+  });
+
+  function fileToDataURL(file){
+    return new Promise(function(resolve,reject){
+      const reader=new FileReader();
+      reader.onload=function(){resolve(reader.result)};
+      reader.onerror=reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  generateBtn.addEventListener("click", async function(){
+    statusBox.textContent="Кнопка нажата. Подготавливаю запрос…";
+    const payload={
+      prompt:promptInput.value.trim(),
+      duration:Number(durationSelect.value),
+      aspectRatio:ratioSelect.value,
+      audio:audioInput.checked
+    };
+    try{
+      if(mode==="image"){
+        const file=imageInput.files[0];
+        if(!file){statusBox.textContent="❗ Сначала выберите изображение.";return;}
+        payload.imageDataUrl=await fileToDataURL(file);
+      }else if(!payload.prompt){
+        statusBox.textContent="❗ Введите промт.";return;
+      }
+
+      generateBtn.disabled=true;
+      statusBox.textContent="⏳ Kling генерирует видео. Это может занять несколько минут…";
+      resultVideo.style.display="none";
+
+      const endpoint=mode==="image"?"/api/generate/image":"/api/generate/text";
+      const response=await fetch(endpoint,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(payload)
+      });
+      const text=await response.text();
+      let data={};
+      try{data=JSON.parse(text)}catch(_){throw new Error("Сервер вернул не JSON: "+text.slice(0,180))}
+      if(!response.ok) throw new Error(data.error||("HTTP "+response.status));
+      if(!data.videoUrl) throw new Error("fal.ai не вернул ссылку на видео.");
+
+      resultVideo.src=data.videoUrl;
+      resultVideo.style.display="block";
+      statusBox.textContent="✅ Видео готово.";
+    }catch(err){
+      console.error(err);
+      statusBox.textContent="❌ Ошибка: "+(err.message||String(err));
+    }finally{
+      generateBtn.disabled=false;
+    }
+  });
+});
+</script>
+</body></html>

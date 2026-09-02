@@ -1,15 +1,15 @@
 {
   "name": "dilshod-ai-video",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
+    "@fal-ai/client": "^1.6.2",
     "express": "^4.21.2"
   }
 }

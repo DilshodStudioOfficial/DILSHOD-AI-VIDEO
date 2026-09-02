@@ -1,8 +1,4 @@
-DILSHOD AI VIDEO — STARTER
-
-1. Откройте index.html двойным кликом.
-2. Внутри есть интерфейс моделей, Image→Video, Text→Video, LONG VIDEO 1–3 минуты, настройки и кредиты.
-3. Реальная AI-генерация требует backend/API. Секретные API-ключи нельзя хранить в HTML.
-4. Stripe Checkout также подключается через backend и webhook.
-
-Следующий этап: подключить Kling 3 / Kling 3 Pro, очередь генерации, MP4, аккаунты, кредиты и Stripe.
+Замените в GitHub файлы index.html, server.js, package.json этими версиями.
+Render: Build Command = npm install; Start Command = npm start.
+FAL_KEY уже должен быть в Render Environment. Никогда не добавляйте ключ в GitHub.
+После commit Render сделает deploy. Для первого теста: Text → Video, 5 сек, звук выключен.

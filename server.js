@@ -95,5 +95,5 @@ app.post("/api/admin/users/:id/credits",admin,(req,res)=>{const u=db.users[req.p
 app.post("/api/admin/users/:id/block",admin,(req,res)=>{const u=db.users[req.params.id];if(!u)return res.status(404).json({error:"Пользователь не найден."});u.blocked=Boolean(req.body?.blocked);saveDb();res.json({ok:true,blocked:u.blocked});});
 
 app.get("/admin",(req,res)=>res.sendFile(path.join(__dirname,"public","admin.html")));
-app.get("*",(req,res)=>res.sendFile(path.join(__dirname,"public","index.html")));
+app.get(/.*/,(req,res)=>res.sendFile(path.join(__dirname,"public","index.html")));
 app.listen(PORT,"0.0.0.0",()=>console.log(`DILSHOD AI VIDEO complete on port ${PORT}`));

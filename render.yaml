@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: dilshod-ai-video
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: FAL_KEY
+        sync: false
+      - key: NODE_VERSION
+        value: 20
